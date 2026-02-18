@@ -1,19 +1,15 @@
 FROM rust:1.75-slim-bookworm AS builder
-
+RUN apt-get update && apt-get install -y git pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 
-COPY Cargo.toml Cargo.lock ./
-RUN mkdir src && echo "fn main() {}" > src/main.rs
+RUN git clone https://github.com/Athar5443/rs-ld-tst .
 RUN cargo build --release
-RUN rm -f target/release/deps/my_server*
-
-COPY . .
-RUN cargo build --release
-
 FROM debian:bookworm-slim
 
+RUN apt-get update && apt-get install -y ca-certificates libssl3 && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-COPY --from:builder /app/target/release/my_server /app/server
-EXPOSE 8080
 
+COPY --from=builder /app/target/release/my_server /app/server
+
+EXPOSE 8080
 CMD ["./server"]

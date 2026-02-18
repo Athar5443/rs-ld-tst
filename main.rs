@@ -1,4 +1,3 @@
-use ax_serve = axum::serve;
 use axum::{routing::any, Router};
 use tokio::net::TcpListener;
 use tokio::signal;
@@ -8,17 +7,15 @@ async fn main() {
     let app = Router::new().fallback(any(handler));
     let addr = "0.0.0.0:8080";
         let listener = TcpListener::bind(addr).await.expect("Gagal bind ke port 8080");
-  println!("on: {}", addr);
+    println!("on: {}", addr);
     axum::serve(listener, app)
         .with_graceful_shutdown(shutdown_signal())
         .await
         .unwrap();
 }
-
 async fn handler() -> &'static str {
     "ok!"
 }
-
 async fn shutdown_signal() {
     let ctrl_c = async {
         signal::ctrl_c()

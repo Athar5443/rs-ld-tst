@@ -3,6 +3,10 @@ name = "ld-tst"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "my_server"
+path = "main.rs"
+
 [dependencies]
 axum = "0.7"
 tokio = { version = "1.0", features = ["full"] }
